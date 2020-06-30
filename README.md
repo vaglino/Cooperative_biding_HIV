@@ -20,3 +20,5 @@ Examples on how to construct an ODE model for in the appropriate format are show
 
 ### Algorithm description
 an initial set of parameters is determined via hypercube scanning of the parameter set. The parameters are then optimized to fit the data, starting with the best hypercube parameters. Both scanning and optimization are done in log space to better explore the wide parameter space. Then standard deviation of the fitted parameters is calculated by bootstrapping.
+
+[![DOI](https://zenodo.org/badge/275973111.svg)](https://zenodo.org/badge/latestdoi/275973111)
