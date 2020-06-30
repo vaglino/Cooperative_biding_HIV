@@ -1,0 +1,78 @@
+function force_lifetime_curve(lnp_fit,forces,raw_data)
+
+%loop trhough each force bin to calculate force lifetime curves
+
+n_bins = size(raw_data,2);
+
+%initialize variables
+avg_lifetimes_exp = zeros(1,n_bins);
+sem_lifetimes_exp = zeros(1,n_bins);
+avg_lifetimes_fit = zeros(1,n_bins);
+avg_lifetimes_exp_w = zeros(1,n_bins);
+F = [];
+lifetime = [];
+
+
+for i=1:n_bins
+    %extract data for single force bin
+    bin = raw_data{i};
+    lifetimes_exp = bin(:,2);
+    max_lifetime = max(lifetimes_exp);
+    
+%     lnp = bin(:,4);
+%     survival_p = exp(lnp);
+    p_fit = exp(lnp_fit{i});
+    
+    %calculate mean lifetime for force bin
+    avg_lifetimes_exp(i) = mean(lifetimes_exp); %experimental
+    sem_lifetimes_exp(i) = std(lifetimes_exp)/sqrt(length(lifetimes_exp));
+%     avg_lifetimes_exp_w(i) = mean(lifetimes_exp.*survival_p); %experimental weighted
+    
+    avg_lifetimes_fit(i) = avg_lifetime(p_fit,max_lifetime); %fit
+    
+    F = [F; bin(:,1)];
+    lifetime = [lifetime; bin(:,2)];
+    
+end
+figure(1)
+e = errorbar(forces,avg_lifetimes_exp,sem_lifetimes_exp,'vertical','s','MarkerSize',5,...
+    'MarkerEdgeColor','k','MarkerFaceColor','k');
+e.Color = 'k';
+e.LineWidth = 1;
+hold on
+plot(forces,avg_lifetimes_fit,'linewidth', 1.5)
+% e = errorbar(forces,avg_lifetimes_exp_w,sem_lifetimes_exp,'vertical','s','MarkerSize',5,...
+%     'MarkerEdgeColor','b','MarkerFaceColor','b');
+% e.Color = 'b';
+% e.LineWidth = 1;
+xlabel('Force (pN)')
+ylabel('Lifetime (s)')
+% ylim([0 6])
+xlim([0 30])
+
+figure(2)
+
+scatter(F,lifetime)
+[F_sort, sort_i] = sort(F);
+lifetime = lifetime(sort_i);
+lifetime_smooth = smooth(lifetime,''sgolay',0.9);
+plot(F_sort,lifetime_smooth)
+
+end
+
+function [avg_lifetime] = avg_lifetime(p_fit,max_lifetime)
+
+%avg lifetime is integral of t*p(t)dt (lifetime weighted by probability)
+t = [0:0.1:max_lifetime]';
+p = p_fit(1:length(t));
+% plot(t,p)
+
+avg_lifetime = mean(t.*p);
+avg_lifetime = sum(p.*0.1);
+% avg_lifetime = sum(t.*p.*0.1)/sum(p.*0.1);
+end
+
+    
+    
+    
+    

@@ -9,6 +9,3 @@ Association fitting
 
 Dissociation fitting
 -bond lifetime distribution modeling
-
-Molecular stiffness
--molecular stiffness fitting with gaussian mixture models, as well as log-gaussian mixture models, programmatically finds optimal number of mixture components based on statistical analysis of p-values, AIC and BIC
