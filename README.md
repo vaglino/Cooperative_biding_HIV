@@ -9,3 +9,7 @@ Association fitting
 
 Dissociation fitting
 -bond lifetime distribution modeling
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
